@@ -1,21 +1,30 @@
 <?php
 file_get_contents("php://input");
-
-$BDD new PDO('mysql:host=localhost;dbname=MW07_morlet;charset=utf8','morlet','amorlet')
-
-$req_type=$_SERVER["REQUEST_METHOD"]
-
-if(isset($_SERVER[PATH_INFO]));
-{
-    $req_path=$_SERVER['PATH_INFO'];
-
-    $req_data = explode("/",$req_path);
-    print_r($req_data);
+try {
+    $BDD = new PDO('mysql:host=localhost;dbname=MW07_morlet;charset=utf8','morlet','snirlla');
+} catch (PDOException $e) {
+    die ('Connexion à la base de données : ECHEC');
 }
-json_decode($jsonString, $assoc, $depth, $options);
 
-if($req_type=="GET")
+
+$req_type=$_SERVER["REQUEST_METHOD"]; //GET,POST,PUT,DELETE
+
+if(isset($_SERVER['PATH_INFO']))
 {
+    $cheminURL=$_SERVER['PATH_INFO'];
 
+    $cheminURL_tableau=explode("/",$cheminURL);
+    // print_r($req_data);
 }
+
+
+
+
+if($req_type=="POST")
+{
+$donneesVolJSON=file_get_contents('php://input');
+$donneesVolAssoc=json_decode($donneesVolJSON,true);
+print_r($donneesVolAssoc);    
+}
+// json_decode($jsonString, $assoc, $depth, $options);
 ?>
