@@ -24,7 +24,29 @@ if($req_type=="POST")
 {
 $donneesVolJSON=file_get_contents('php://input');
 $donneesVolAssoc=json_decode($donneesVolJSON,true);
-print_r($donneesVolAssoc);    
+print_r($donneesVolAssoc);  
+
+
+$req = "SELECT idutilisateur FROM utilisateur WHERE nom = ?";
+$reqpreparer=$BDD->prepare($req);
+$tableauDeDonnees=array("eleve");
+$reqpreparer->execute($tableauDeDonnees);
+$reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+$reqpreparer->closeCursor();
+print_r($reponse);
+
+if(!$reponse){
+$req = "INSERT INTO utilisateur (nom) VALUES (?);";
+// $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+$reqpreparer=$BDD->prepare($req);
+$tableauDeDonnees=array("eleve");
+$reqpreparer->execute($tableauDeDonnees);
+print_r(`Un utilisateur a été créer`);
+};
+
+
+
+
 }
 // json_decode($jsonString, $assoc, $depth, $options);
 ?>
