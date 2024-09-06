@@ -1,12 +1,12 @@
 <?php
-file_get_contents("php://input");
+
 try {
     $BDD = new PDO('mysql:host=localhost;dbname=MW07_morlet;charset=utf8','morlet','snirlla');
 } catch (PDOException $e) {
     die ('Connexion à la base de données : ECHEC');
 }
 
-
+$body = file_get_contents("php://input");
 $req_type=$_SERVER["REQUEST_METHOD"]; //GET,POST,PUT,DELETE
 
 if(isset($_SERVER['PATH_INFO']))
@@ -14,7 +14,7 @@ if(isset($_SERVER['PATH_INFO']))
     $cheminURL=$_SERVER['PATH_INFO'];
 
     $cheminURL_tableau=explode("/",$cheminURL);
-    // print_r($req_data);
+    print_r($req_data);
 }
 
 
@@ -33,9 +33,12 @@ $tableauDeDonnees=array("eleve");
 $reqpreparer->execute($tableauDeDonnees);
 $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
 $reqpreparer->closeCursor();
-print_r($reponse);
 
-if(!$reponse){
+// print_r($body);
+
+
+if($reponse){print_r($reponse);}
+else{
 $req = "INSERT INTO utilisateur (nom) VALUES (?);";
 // $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
 $reqpreparer=$BDD->prepare($req);
@@ -44,8 +47,8 @@ $reqpreparer->execute($tableauDeDonnees);
 print_r(`Un utilisateur a été créer`);
 };
 
-
-
+$jsonbody = json_decode($body,true);
+print_r($jsonbody->numero);
 
 }
 // json_decode($jsonString, $assoc, $depth, $options);
