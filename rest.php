@@ -22,6 +22,10 @@ if(isset($_SERVER['PATH_INFO']))
 
 if($req_type=="POST")
 {
+
+
+
+
 $donneesVolJSON=file_get_contents('php://input');
 $donneesVolAssoc=json_decode($donneesVolJSON,true);
 // print_r($donneesVolAssoc);  
@@ -58,9 +62,51 @@ else
         $tableauDeDonnees=array($Username);
         $reqpreparer->execute($tableauDeDonnees);
         print_r('Un utilisateur a été créer');
+
+
+
+        $req = "SELECT idutilisateur FROM utilisateur WHERE nom = ?";
+        $reqpreparer=$BDD->prepare($req);
+        $tableauDeDonnees=array($Username);
+        $reqpreparer->execute($tableauDeDonnees);
+        $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+        $reqpreparer->closeCursor();
+
+        $_COOKIE = [$reponse[0]['idutilisateur']];
+        print_r($_COOKIE);
     };
 
-//$jsonbody = json_decode($body,true);
+    $Numero = $donneesVolAssoc['numero'];
+
+$req = "SELECT iddrone FROM drone WHERE refDrone = ?";
+$reqpreparer=$BDD->prepare($req);
+$tableauDeDonnees=array($Numero);
+$reqpreparer->execute($tableauDeDonnees);
+$reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+$reqpreparer->closeCursor();
+
+if($reponse)
+    {
+print_r("le drone existe");
+    }
+else{
+    $req = "INSERT INTO drone (refDrone) VALUES (?);";
+    // $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+    $reqpreparer=$BDD->prepare($req);
+    $tableauDeDonnees=array($Numero);
+    $reqpreparer->execute($tableauDeDonnees);
+    print_r('Un drone a été créer');
+
+
+
+    $req = "SELECT iddrone FROM drone WHERE refDrone = ?";
+    $reqpreparer=$BDD->prepare($req);
+    $tableauDeDonnees=array($Numero);
+    $reqpreparer->execute($tableauDeDonnees);
+    $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+    $reqpreparer->closeCursor();
+
+}
 
 }
 // json_decode($jsonString, $assoc, $depth, $options);
