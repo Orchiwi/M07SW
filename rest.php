@@ -51,7 +51,7 @@ $reqpreparer->closeCursor();
 if($reponse)
     {
         // print_r($reponse[0]['idutilisateur']);
-        $_COOKIE = [$reponse[0]['idutilisateur']];
+        $_COOKIE['idutilisateur'] = [$reponse[0]['idutilisateur']];
         print_r($_COOKIE);
     }
 else
@@ -61,7 +61,7 @@ else
         $reqpreparer=$BDD->prepare($req);
         $tableauDeDonnees=array($Username);
         $reqpreparer->execute($tableauDeDonnees);
-        print_r('Un utilisateur a été créer');
+        print_r("Un utilisateur a été créer\n");
 
 
 
@@ -72,7 +72,7 @@ else
         $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
         $reqpreparer->closeCursor();
 
-        $_COOKIE = [$reponse[0]['idutilisateur']];
+        $_COOKIE['idutilisateur'] = [$reponse[0]['idutilisateur']];
         print_r($_COOKIE);
     };
 
@@ -87,7 +87,7 @@ $reqpreparer->closeCursor();
 
 if($reponse)
     {
-print_r("le drone existe");
+print_r("le drone existe\n");
     }
 else{
     $req = "INSERT INTO drone (refDrone) VALUES (?);";
@@ -95,7 +95,7 @@ else{
     $reqpreparer=$BDD->prepare($req);
     $tableauDeDonnees=array($Numero);
     $reqpreparer->execute($tableauDeDonnees);
-    print_r('Un drone a été créer');
+    print_r("Un drone a été créer\n");
 
 
 
@@ -107,6 +107,20 @@ else{
     $reqpreparer->closeCursor();
 
 }
+
+
+$time = $donneesVolAssoc['time'];
+
+
+$date=date('Y-m-d H:i:s',$time);
+print_r($date. "\n");
+$req = "SELECT idvol,nom FROM vol INNER JOIN utilisateur ON utilisateur.idutilisateur = vol.idutilisateur WHERE vol.idutilisateur = ? AND vol.dateVol = ?;";
+$reqpreparer=$BDD->prepare($req);
+$tableauDeDonnees=array($Username,$date);
+$reqpreparer->execute($tableauDeDonnees);
+$reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+$reqpreparer->closeCursor();
+print_r($reponse);
 
 }
 // json_decode($jsonString, $assoc, $depth, $options);
