@@ -91,6 +91,41 @@ else {
     $tableauDeDonnees=array($date,$UserId);
     $reqpreparer->execute($tableauDeDonnees);
     print_r("Un vol a été créer\n");
+    $req = "SELECT idvol,nom FROM vol INNER JOIN utilisateur ON utilisateur.idutilisateur = vol.idutilisateur WHERE vol.dateVol = ? AND vol.idutilisateur = ? ;";
+    $reqpreparer=$BDD->prepare($req);
+    $tableauDeDonnees=array($date,$UserId);
+    $reqpreparer->execute($tableauDeDonnees);
+    $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+    $reqpreparer->closeCursor();
 }
+$idvol = $reponse[0]['idvol'];
+
+$etatdonneesVolAssoc = $donneesVolAssoc['etats'];
+// print_r($etatdonneesVolAssoc);
+foreach($etatdonneesVolAssoc as $etat)
+{
+    print_r($etat);
+    $pitch = $etat['pitch'];
+    $roll = $etat['roll'];
+    $yaw = $etat['yaw'];
+    $vgx = $etat['vgx'];
+    $vgy = $etat['vgy'];
+    $vgz = $etat['vgz'];
+    $templ = $etat['templ'];
+    $temph = $etat['temph'];
+    $tof = $etat['tof'];
+    $h = $etat['h'];
+    $bat = $etat['baro'];
+    $time = $etat['time'];
+    $agx = $etat['agx'];
+    $agy = $etat['agy'];
+    $agz = $etat['agz'];
+        $req = "INSERT INTO etat (idvol,pitch,roll,yaw,vgx,vgy,vgz,templ,temph,tof,h,bat,baro,time,agx,agy,agz) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        $reqpreparer=$BDD->prepare($req);
+        $tableauDeDonnees=array($idvol,$pitch,$roll,$yaw,$vgx,$vgy,$vgz,$templ,$temph,$tof,$h,$bat,$time,$agx,$agy,$agz);
+        $reqpreparer->execute($tableauDeDonnees);
+        print_r("Un état a été créer\n");
+}
+
 }
 ?>
