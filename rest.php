@@ -28,6 +28,7 @@ if($reponse)
         print_r("cet utilisateur existe\n");
         $_COOKIE['idutilisateur'] = [$reponse[0]['idutilisateur']];
         print_r("Le cookie est :" . $_COOKIE['idutilisateur'][0] . "\n");
+        $UserId = $reponse[0]['idutilisateur'];
     }
 else
     {
@@ -37,16 +38,27 @@ else
     $tableauDeDonnees=array($Username);
     $reqpreparer->execute($tableauDeDonnees);
     print_r("Un utilisateur a été créer\n");
-    $req = "SELECT idutilisateur FROM utilisateur WHERE nom = ?";
-    $reqpreparer=$BDD->prepare($req);
-    $tableauDeDonnees=array($Username);
-    $reqpreparer->execute($tableauDeDonnees);
-    $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
-    $reqpreparer->closeCursor();
-    $_COOKIE['idutilisateur'] = [$reponse[0]['idutilisateur']];
+    $UserId=$BDD->lastInsertId();
+    // $req = "SELECT idutilisateur FROM utilisateur WHERE nom = ?";
+    // $reqpreparer=$BDD->prepare($req);
+    // $tableauDeDonnees=array($Username);
+    // $reqpreparer->execute($tableauDeDonnees);
+    // $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+    // $reqpreparer->closeCursor();
+    $_COOKIE['idutilisateur'] = $UserId;
     print_r("Le cookie est :" . $_COOKIE['idutilisateur'] . "\n");
-    };
-$UserId = $reponse[0]['idutilisateur'];
+    
+    
+    
+// print_r("\n\n\n".$idutil. "\n\n\n");
+    
+
+};
+
+
+    
+
+
 $Numero = $donneesVolAssoc['numero'];
 $req = "SELECT iddrone FROM drone WHERE refDrone = ?";
 $reqpreparer=$BDD->prepare($req);
@@ -57,6 +69,7 @@ $reqpreparer->closeCursor();
 if($reponse)
     {
     print_r("le drone existe\n");
+    $DroneId = $reponse[0]['iddrone'];
     }
 else{
     $req = "INSERT INTO drone (refDrone) VALUES (?);";
@@ -65,40 +78,43 @@ else{
     $tableauDeDonnees=array($Numero);
     $reqpreparer->execute($tableauDeDonnees);
     print_r("Un drone a été créer\n");
-    $req = "SELECT iddrone FROM drone WHERE refDrone = ?";
-    $reqpreparer=$BDD->prepare($req);
-    $tableauDeDonnees=array($Numero);
-    $reqpreparer->execute($tableauDeDonnees);
-    $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
-    $reqpreparer->closeCursor();
+    $DroneId=$BDD->lastInsertId();
+    // $req = "SELECT iddrone FROM drone WHERE refDrone = ?";
+    // $reqpreparer=$BDD->prepare($req);
+    // $tableauDeDonnees=array($Numero);
+    // $reqpreparer->execute($tableauDeDonnees);
+    // $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+    // $reqpreparer->closeCursor();
 }
 $time = $donneesVolAssoc['time'];
 $date=date('Y-m-d H:i:s',$time);
 print_r($date. "\n");
-$req = "SELECT idvol,nom FROM vol INNER JOIN utilisateur ON utilisateur.idutilisateur = vol.idutilisateur WHERE vol.dateVol = ? AND vol.idutilisateur = ? ;";
+$req = "SELECT idvol,nom FROM vol INNER JOIN utilisateur ON utilisateur.idutilisateur = vol.idutilisateur WHERE vol.dateVol = ? AND vol.idutilisateur = ? AND vol.iddrone = ? ;";
 $reqpreparer=$BDD->prepare($req);
-$tableauDeDonnees=array($date,$UserId);
+$tableauDeDonnees=array($date,$UserId,$DroneId);
 $reqpreparer->execute($tableauDeDonnees);
 $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
 $reqpreparer->closeCursor();
 if($reponse)
     {
+    $idvol = $reponse[0]['idvol'];
     print_r("ce vol existe\n");
     }
 else {
-    $req = "INSERT INTO vol (dateVol,idutilisateur) VALUES (?,?);";
+    $req = "INSERT INTO vol (dateVol,idutilisateur,iddrone) VALUES (?,?,?);";
     $reqpreparer=$BDD->prepare($req);
-    $tableauDeDonnees=array($date,$UserId);
+    $tableauDeDonnees=array($date,$UserId,$DroneId);
     $reqpreparer->execute($tableauDeDonnees);
     print_r("Un vol a été créer\n");
-    $req = "SELECT idvol,nom FROM vol INNER JOIN utilisateur ON utilisateur.idutilisateur = vol.idutilisateur WHERE vol.dateVol = ? AND vol.idutilisateur = ? ;";
-    $reqpreparer=$BDD->prepare($req);
-    $tableauDeDonnees=array($date,$UserId);
-    $reqpreparer->execute($tableauDeDonnees);
-    $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
-    $reqpreparer->closeCursor();
+    $VolId=$BDD->lastInsertId();
+    // $req = "SELECT idvol,nom FROM vol INNER JOIN utilisateur ON utilisateur.idutilisateur = vol.idutilisateur WHERE vol.dateVol = ? AND vol.idutilisateur = ? ;";
+    // $reqpreparer=$BDD->prepare($req);
+    // $tableauDeDonnees=array($date,$UserId);
+    // $reqpreparer->execute($tableauDeDonnees);
+    // $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+    // $reqpreparer->closeCursor();
 }
-$idvol = $reponse[0]['idvol'];
+
 
 $etatdonneesVolAssoc = $donneesVolAssoc['etats'];
 // print_r($etatdonneesVolAssoc);
@@ -115,14 +131,15 @@ foreach($etatdonneesVolAssoc as $etat)
     $temph = $etat['temph'];
     $tof = $etat['tof'];
     $h = $etat['h'];
-    $bat = $etat['baro'];
+    $bat = $etat['bat'];
+    $baro = $etat['baro'];
     $time = $etat['time'];
     $agx = $etat['agx'];
     $agy = $etat['agy'];
     $agz = $etat['agz'];
         $req = "INSERT INTO etat (idvol,pitch,roll,yaw,vgx,vgy,vgz,templ,temph,tof,h,bat,baro,time,agx,agy,agz) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         $reqpreparer=$BDD->prepare($req);
-        $tableauDeDonnees=array($idvol,$pitch,$roll,$yaw,$vgx,$vgy,$vgz,$templ,$temph,$tof,$h,$bat,$time,$agx,$agy,$agz);
+        $tableauDeDonnees=array($idvol,$pitch,$roll,$yaw,$vgx,$vgy,$vgz,$templ,$temph,$tof,$h,$bat,$baro,$time,$agx,$agy,$agz);
         $reqpreparer->execute($tableauDeDonnees);
         print_r("Un état a été créer\n");
 }
