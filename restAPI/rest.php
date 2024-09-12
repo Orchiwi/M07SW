@@ -10,8 +10,21 @@ if(isset($_SERVER['PATH_INFO']))
     $cheminURL=$_SERVER['PATH_INFO'];
 
     $cheminURL_tableau=explode("/",$cheminURL);
-    print_r($req_data);
+    print_r($cheminURL_tableau);
 }
+
+if($req_type=="GET"){
+
+    if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='nombredrone'){
+        $req = "SELECT COUNT(iddrone) FROM drone";
+        $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $res->execute(NULL);
+        $data = $res->fetchAll(PDO::FETCH_ASSOC);
+        $data_json = json_encode($data);
+        print_r($data_json); 
+    }
+}
+
 if($req_type=="POST")
 {
 $donneesVolJSON=file_get_contents('php://input');
