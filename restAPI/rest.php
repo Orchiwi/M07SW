@@ -10,18 +10,18 @@ if(isset($_SERVER['PATH_INFO']))
     $cheminURL=$_SERVER['PATH_INFO'];
 
     $cheminURL_tableau=explode("/",$cheminURL);
-    print_r($cheminURL_tableau);
+    // print_r($cheminURL_tableau);
 }
 
 if($req_type=="GET"){
 
-    if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='nombredrone'){
+    if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='nbdrone'){
         $req = "SELECT COUNT(iddrone) FROM drone";
         $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
         $res->execute(NULL);
         $data = $res->fetchAll(PDO::FETCH_ASSOC);
         $data_json = json_encode($data);
-        print_r($data_json); 
+        print_r($data[0]['COUNT(iddrone)']); 
     }
 }
 

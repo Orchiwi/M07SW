@@ -37,31 +37,31 @@ function suivi() {
     };
     xhttp.open("GET", "mainDrone.html", true);
     xhttp.send();
-    recupererNombreDrone()
     setCookie("page","suivi",1); 
-
+    recupererStatistique()
 
 
 }
 
-function recupererNombreDrone(){
+function recupererStatistique(){
     const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       var reponse = this.responseText;
 
       var jsondata = JSON.parse(reponse);
-      console.log(jsondata[0].instant);
+      // console.log(jsondata[0].instant);
 
-    //   document.getElementById("reponse").innerHTML = html;
+      // document.getElementById("reponse").innerHTML = html;
 
-      console.log(reponse);
+      console.log(reponse[0]);
+      document.getElementById("nbdrone").textContent = reponse
     }
   };
 
     xhttp.open(
         "GET",
-        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/nombredrone"
+        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/nbdrone"
       );
       xhttp.send();
     }
