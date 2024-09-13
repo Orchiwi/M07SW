@@ -23,6 +23,22 @@ if($req_type=="GET"){
         $data_json = json_encode($data);
         print_r($data[0]['COUNT(iddrone)']); 
     }
+    else if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='nbvol'){
+        $req = "SELECT COUNT(idvol) FROM vol";
+        $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $res->execute(NULL);
+        $data = $res->fetchAll(PDO::FETCH_ASSOC);
+        $data_json = json_encode($data);
+        print_r($data[0]['COUNT(idvol)']); 
+    }
+    else if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='nbutilisateur'){
+        $req = "SELECT COUNT(idutilisateur) FROM utilisateur";
+        $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $res->execute(NULL);
+        $data = $res->fetchAll(PDO::FETCH_ASSOC);
+        $data_json = json_encode($data);
+        print_r($data[0]['COUNT(idutilisateur)']); 
+    }
 }
 
 if($req_type=="POST")

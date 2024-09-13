@@ -44,24 +44,33 @@ function suivi() {
 }
 
 function recupererStatistique(){
-    const xhttp = new XMLHttpRequest();
+
+  const stat = ['nbdrone', 'nbvol', 'nbutilisateur'];
+
+  stat.forEach((nbstat) =>{
+  const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       var reponse = this.responseText;
 
-      var jsondata = JSON.parse(reponse);
+      // var jsondata = JSON.parse(reponse);
       // console.log(jsondata[0].instant);
 
       // document.getElementById("reponse").innerHTML = html;
 
       console.log(reponse[0]);
-      document.getElementById("nbdrone").textContent = reponse
+      document.getElementById(nbstat).textContent = reponse
     }
   };
 
     xhttp.open(
         "GET",
-        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/nbdrone"
+        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/" + nbstat
       );
       xhttp.send();
+    }
+);
+
+
+
     }
