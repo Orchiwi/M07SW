@@ -96,5 +96,11 @@ header #dark_light{display:inline;width:30px;height: 30px;margin: 23px 10px;posi
 	line-height: 100px;
 	height: 100px;
 	color: var(--hf-text-color);}
-.tableau_statistique{width:100%;}
-.tableau_statistique input{width:100%;}
+.tableau_statistique{width:100%;
+}
+.tableau_statistique input{width:100%;
+}
+table, th, td {
+	border: 1px solid;
+	padding: 10px;
+  }
