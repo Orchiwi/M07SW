@@ -59,7 +59,7 @@ function recupererDonneesDrones(){
   if (this.readyState == 4 && this.status == 200) {
     let reponseAPI=JSON.parse(this.responseText);
     console.log(reponseAPI.length)
-    var table="<div ><table class='tableau_statistique '><tr class='centrer'><th>Numérodrône</th><th>Marque</th><th>Modèle</th><th>Référence</th><th>Dateachat</th><th>Action</th></tr>";
+    var table="<div ><table class='tableau_statistique '><tr class='centrer'><th>Numérodrône</th><th>Marque</th><th>Modèle</th><th>Référence</th><th>Dateachat</th></tr>";
  for(let i=0;i<reponseAPI.length;i++){
  table+="<tr class='centrer'>";
  let donneesVol=reponseAPI[i];
@@ -98,7 +98,7 @@ function recupererDonneesVols(){
   if (this.readyState == 4 && this.status == 200) {
     let reponseAPI=JSON.parse(this.responseText);
     console.log(reponseAPI.length)
-    var table="<div ><table class='tableau_statistique '><tr class='centrer'><th>NuméroVol</th><th>NuméroUtilisateur</th><th>Date du Vol</th><th>NuméroDrone</th><th>Action</th></tr>";
+    var table="<div ><table class='tableau_statistique '><tr class='centrer'><th>NuméroVol</th><th>NuméroUtilisateur</th><th>Date du Vol</th><th>NuméroDrone</th></tr>";
  for(let i=0;i<reponseAPI.length;i++){
  table+="<tr class='centrer'>";
  let donneesVol=reponseAPI[i];
