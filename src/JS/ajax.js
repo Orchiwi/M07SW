@@ -6,6 +6,7 @@ document.getElementById("nav_suivi").addEventListener("click", suivi);
 
 
 
+
 // function loadcorrectpage()
 // {
 //     let page = getCookie("page");
@@ -43,11 +44,29 @@ function suivi() {
     setCookie("page","suivi",1); 
     
    recupererStatistique()
-   document.getElementById("donneesdrone").addEventListener("click",recupererDonneesDrones);
+  //  document.getElementById("donneesdrone").addEventListener("click",recupererDonneesDrones);
+   
 
 
 }
+function GraphShow() {
+  console.debug("Graph ! ");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            var reponse = xhttp.responseText;
+            // console.debug(reponse);
+            var pagehtml = document.getElementById( 'section' );
+            pagehtml.innerHTML = reponse;
 
+            
+        }
+    };
+    xhttp.open("GET", "Graph.html", true);
+    xhttp.send();
+    setCookie("page","graph",1); 
+    RecupererMesure()
+}
 function recupererDonneesDrones(){
 
   console.debug("Donnees Drones ! ");
@@ -98,7 +117,7 @@ function recupererDonneesVols(){
   if (this.readyState == 4 && this.status == 200) {
     let reponseAPI=JSON.parse(this.responseText);
     console.log(reponseAPI.length)
-    var table="<div ><table class='tableau_statistique '><tr class='centrer'><th>NuméroVol</th><th>NuméroUtilisateur</th><th>Date du Vol</th><th>NuméroDrone</th></tr>";
+    var table="<div ><table class='tableau_statistique '><tr class='centrer'><th>NuméroVol</th><th>NuméroUtilisateur</th><th>Date du Vol</th><th>NuméroDrone</th><th>Action</th></tr>";
  for(let i=0;i<reponseAPI.length;i++){
  table+="<tr class='centrer'>";
  let donneesVol=reponseAPI[i];
@@ -106,10 +125,14 @@ function recupererDonneesVols(){
  table+="<td>"+donneesVol.idutilisateur+"</td>";
  table+="<td>"+donneesVol.dateVol+"</td>";
  table+="<td>"+donneesVol.iddrone+"</td>";
+ table+="<td>"+"<button id='graph'>test</button>"+"</td>";
  table+="</tr>";
+ 
+ 
  }
  table+="</table></div>";
 document.getElementById("section").innerHTML=table;
+document.getElementById("graph").addEventListener("click",GraphShow);
   }
 };
 
@@ -160,37 +183,6 @@ document.getElementById("section").innerHTML=table;
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function recupererStatistique(){
 
   const stat = ['nbdrone', 'nbvol', 'nbutilisateur'];
@@ -222,3 +214,85 @@ function recupererStatistique(){
 
 
     }
+
+
+
+
+
+
+
+
+
+
+    function Graph(id, templ, temph) {
+      // const context = document.getElementById("monGraphe").getContext("2d");
+      // context.clearRect(
+      //   0,
+      //   0,
+      //   document.getElementById("monGraphe").width,
+      //   document.getElementById("monGraphe").height
+      // );
+      var ctx = document.getElementById("monGraphe");
+      new Chart(ctx, {
+        type: "line",
+        options: {
+          scales: {
+            vitesse: { type: "linear", display: true, position: "left" },
+            regime: { type: "linear", display: true, position: "right" },
+          },
+        },
+        data: {
+          labels: id,
+          datasets: [
+            {
+              label: "templ",
+              data: templ,
+              borderColor: "magenta",
+              borderWidth: 1,
+              yAxisID: "templ",
+            },
+            {
+              label: "temph",
+              data: temph,
+              borderColor: "green",
+              borderWidth: 1,
+              yAxisID: "temph",
+            },
+          ],
+        },
+      });
+    }
+    
+    function RecupererMesure() {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+          var reponse = this.responseText;
+          var jsondata = JSON.parse(reponse);
+    
+          var id = [];
+          var templ = [];
+          var temph = [];
+          for (let i = 0; i < jsondata.length; i++) {
+            id[i] = jsondata[i].idetat;
+            templ[i] = jsondata[i].templ;
+            temph[i] = jsondata[i].temph;
+          }
+          console.log(id,templ,temph)
+          Graph(id, templ, temph);
+        }
+      };
+      // let datedebut = document.getElementById("datedebut").value;
+      // let datefin = document.getElementById("datefin").value;
+      xhttp.open(
+        "GET",
+        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/etat"
+        //  +
+          // datedebut +
+          // "/" +
+          // datefin
+      );
+      xhttp.send();
+    }
+    
+    
