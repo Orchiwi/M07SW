@@ -64,13 +64,18 @@ if($req_type=="GET"){
         print_r($data_json);
       }
       else if (isset($cheminURL_tableau[1])&& $cheminURL_tableau[1]=='etat'){
-        $req = "SELECT * FROM etat WHERE idvol=4";
-        // $req = "SELECT * FROM etat WHERE idetat % 4 = 0";
-        $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
-        $res->execute(NULL);
-        $data = $res->fetchAll(PDO::FETCH_ASSOC);
-        $data_json = json_encode($data);
-        print_r($data_json);
+        if(isset($cheminURL_tableau[2])){
+            if($cheminURL_tableau[3] == 'h'){
+                $req = "SELECT idetat,h FROM etat WHERE idvol=" . $cheminURL_tableau[2];
+                // $req = "SELECT * FROM etat WHERE idetat % 4 = 0";
+                $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $res->execute(NULL);
+                $data = $res->fetchAll(PDO::FETCH_ASSOC);
+                $data_json = json_encode($data);
+                print_r($data_json);
+            }
+        
+    }
       }
 }
 
