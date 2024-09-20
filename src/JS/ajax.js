@@ -1,5 +1,6 @@
 // window.addEventListener("load", loadcorrectpage);
 
+
 document.getElementById("nav_suivi").addEventListener("click", suivi);
 
 
@@ -49,7 +50,7 @@ function suivi() {
 
 
 }
-function GraphShow(idvol) {
+function GraphShow(idvol,value) {
   console.debug("Graph ! ");
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -59,13 +60,29 @@ function GraphShow(idvol) {
             var pagehtml = document.getElementById( 'section' );
             pagehtml.innerHTML = reponse;
 
+            var elements = document.getElementsByClassName("choixgraphe");
+ var myFunction = function() {
+     var attribute = this.getAttribute("data-idvol");
+     alert(attribute);
+ };
+ 
+ for (var i = 0; i < elements.length; i++) {
+     elements[i].addEventListener('change',function() {
+      if (this.checked) {
+        let ValueToSearch = this.getAttribute("id")
+        var grapheid=document.getElementById("monGraphe").VolId;  
+        GraphShow(grapheid,ValueToSearch)
+      }
+    });
+     
+  }
             
         }
     };
     xhttp.open("GET", "Graph.html", true);
     xhttp.send();
     setCookie("page","graph",1); 
-    RecupererMesure(idvol)
+    RecupererMesure(idvol,value)
 }
 function recupererDonneesDrones(){
 
@@ -139,10 +156,10 @@ var elements = document.getElementsByClassName("buttongraph");
      var attribute = this.getAttribute("data-idvol");
      alert(attribute);
  };
- 
+ let value = "h"
  for (var i = 0; i < elements.length; i++) {
   let idvol = elements[i].getAttribute("data-idvol")
-     elements[i].addEventListener('click', function(){GraphShow(idvol)}, false);
+     elements[i].addEventListener('click', function(){GraphShow(idvol,value)}, false);
      
   }
 };
@@ -235,54 +252,70 @@ function recupererStatistique(){
 
 
 
-    function Graph(idetat, h) {
-      // const context = document.getElementById("monGraphe").getContext("2d");
-      // context.clearRect(
-      //   0,
-      //   0,
-      //   document.getElementById("monGraphe").width,
-      //   document.getElementById("monGraphe").height
-      // );
+    function Graph(idetat, value) {
+
+      const minValue = Math.min(...idetat);
+  let dataInSeconds = idetat.map(value =>(value -minValue)/10)
+
+      // const numbers = [10, 20, 23, 5, 40, 54, 80];
+      
+      // const maxValue = Math.max(...idetat);
+      // console.log(maxValue - minValue)
+      // time = (maxValue - minValue)
+      // console.log(time)
+
       var ctx = document.getElementById("monGraphe");
       new Chart(ctx, {
         type: "line",
-        options: {
-          scales: {
-            vitesse: { type: "linear", display: true, position: "left" },
-            regime: { type: "linear", display: true, position: "right" },
-          },
-        },
         data: {
-          labels: idetat,
+          labels: dataInSeconds,
           datasets: [
             {
-              label: "h",
-              data: h,
-              borderColor: "magenta",
+              label: "value",
+              data: value,
+              borderColor: "blue",
               borderWidth: 1,
-              yAxisID: "h",
+              yAxisID: "value",
             },
           ],
+        },
+        options: {
+          scales: {
+            idetat: { type: "linear", display: true, position: "left"},
+            value: { type: "linear", display: true, position: "right" },
+          },
         },
       });
     }
     
-    function RecupererMesure(idvol) {
+    function RecupererMesure(idvol,value) {
+      // const graphe = document.getElementById("monGraphe");
+      // console.log(graphe)
+
+      // graphe.setAttribute("VolId", idvol);
+      var RequestType = value
+      console.log(value)
+      console.log("http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/etat/"+idvol+"/"+RequestType)
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
+          // console.log(value)
           var reponse = this.responseText;
+          console.log(reponse)
           var jsondata = JSON.parse(reponse);
-    
+          
           var idetat = [];
-          var h = [];
+          var value = [];
+
+console.log(jsondata)
           for (let i = 0; i < jsondata.length; i++) {
             idetat[i] = jsondata[i].idetat;
-            h[i] = jsondata[i].h;
+            value[i] = jsondata[i][RequestType];
+            console.log(value[i])
           }
-          console.log(idetat,h)
-          console.log("http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/etat/"+idvol+"/h")
-          Graph(idetat,h);
+          // console.log(idetat,value)
+          
+          Graph(idetat,value);
         }
       };
       // let datedebut = document.getElementById("datedebut").value;
@@ -290,7 +323,7 @@ function recupererStatistique(){
       // console.log("\n\n\n\n"+idvol)
       xhttp.open(
         "GET",
-        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/etat/"+idvol+"/h"
+        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/etat/"+idvol+"/"+value
         //  +
           // datedebut +
           // "/" +

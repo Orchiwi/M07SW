@@ -9,16 +9,21 @@ form {
     padding-left: 50px;
 }
 
-label, input, button {
+label, input{
     display: block;
     font-size: 1em;
-    width: 400px;
+	padding-left: 20px;
+}
+button{
+	display: block;
+    font-size: 1em;
+	width: 400px;
 }
 input {
     padding: 8px 16px;
     margin: 3px 0;
     box-sizing: border-box;
-		text-align:center;
+	text-align:center;
 }
 input[type=number]{
 	-moz-appearance: textfield;
@@ -104,3 +109,13 @@ table, th, td {
 	border: 1px solid;
 	padding: 10px;
   }
+
+.label_graphe{
+	text-align:center;
+	margin:0;
+	padding:0;
+
+}
+.form_container{
+	display: flex;
+}
