@@ -173,7 +173,7 @@ else {
     $tableauDeDonnees=array($date,$UserId,$DroneId);
     $reqpreparer->execute($tableauDeDonnees);
     print_r("Un vol a été créer\n");
-    $VolId=$BDD->lastInsertId();
+    $idvol=$BDD->lastInsertId();
     // $req = "SELECT idvol,nom FROM vol INNER JOIN utilisateur ON utilisateur.idutilisateur = vol.idutilisateur WHERE vol.dateVol = ? AND vol.idutilisateur = ? ;";
     // $reqpreparer=$BDD->prepare($req);
     // $tableauDeDonnees=array($date,$UserId);
