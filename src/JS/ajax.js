@@ -7,6 +7,7 @@ document.getElementById("nav_suivi").addEventListener("click", suivi);
 
 
 
+
 // function loadcorrectpage()
 // {
 //     let page = getCookie("page");
@@ -33,7 +34,7 @@ function suivi() {
         if (this.readyState == 4 && this.status == 200) {
             var reponse = xhttp.responseText;
             // console.debug(reponse);
-            var pagehtml = document.getElementById( 'section' );
+            let pagehtml = document.getElementById( 'section' );
             pagehtml.innerHTML = reponse;
 
             
@@ -49,6 +50,9 @@ function suivi() {
 
 
 }
+
+
+
 function GraphShow(idvol) {
   console.debug("Graph ! ");
     var xhttp = new XMLHttpRequest();

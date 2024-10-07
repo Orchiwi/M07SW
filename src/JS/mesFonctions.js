@@ -207,8 +207,14 @@ function mettreAJourLeCompteur()
 
 // La gestion des événements sur la page :
 // Evenement sur le titre h1 du header
-var h1_header = document.getElementById("h1_header");
-h1_header.addEventListener('mouseover', changerTitre);
+
+
+
+// var h1_header = document.getElementById("h1_header");
+// h1_header.addEventListener('mouseover', changerTitre);
+
+
+
 
 // Evenement sur le paragraphe du footer
 var p_footer = document.getElementById("p_footer");
