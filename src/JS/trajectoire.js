@@ -1,6 +1,7 @@
 document.getElementById("trajectoire").addEventListener("click",trajectoire)
 
 
+
  function trajectoire(){
     console.debug("Trajectoire ! ");
     var xhttp = new XMLHttpRequest();
@@ -18,8 +19,10 @@ document.getElementById("trajectoire").addEventListener("click",trajectoire)
      var img = new Image();
      img.src = '../img/plan.png';
      img.onload = function () {
-      ctx.drawImage(img, 0, 0);
-      }
+      ctx.drawImage(img, 0, 0);  
+    }
+    document.getElementById("nav_creer").addEventListener("click",showCreer)
+    document.getElementById("nav_charger").addEventListener("click",showCharger)
       }
       
     }
@@ -27,4 +30,15 @@ document.getElementById("trajectoire").addEventListener("click",trajectoire)
     xhttp.open("GET","trajectoire.html",true);
     xhttp.send();
     setCookie("page","trajectoire",1)
+  }
+
+  function showCreer(){
+    document.getElementById("liste_trajectoire").style.display="none"
+    document.getElementById("creer_trajectoire").style.display="block"
+  }
+
+  function showCharger(){
+     document.getElementById("creer_trajectoire").style.display="none"
+    document.getElementById("liste_trajectoire").style.display="block"
+   
   }
