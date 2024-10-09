@@ -4,3 +4,26 @@
 #liste_trajectoire{
     display:block
 }
+.trajectoire{
+	display: flex;
+
+}
+.logdiv{
+    /* padding: 120px 150px; */
+    /* margin: 8px 0; */
+    /* box-sizing: border-box; */
+    border: 1px solid grey;
+    border-radius: 10px;
+    /* align-content:flex-end; */
+    /* align-items:flex-end; */
+    /* flex-grow: 1; */
+    /* justify-content: flex-end; */
+    height: auto;
+    min-height: 300px;
+    width: 300px;
+    
+}
+.logtraj{
+    background-color: lightgray;
+    height: 30px;
+}

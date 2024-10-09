@@ -76,9 +76,7 @@ header #dark_light{display:inline;width:30px;height: 30px;margin: 23px 10px;posi
 	text-align: center;
 	font-weight: 500;
 }
-.trajectoire{
-	display: flex;
-}
+
 @media screen and (orientation: portrait) {
 	.statistique{
 		width:90%;
