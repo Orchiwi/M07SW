@@ -26,6 +26,7 @@ function trajectoire() {
         .getElementById("nav_charger")
         .addEventListener("click", showCharger);
     }
+    document.getElementById("effacer").addEventListener("click", effacerTrajectoire);
   };
 
   xhttp.open("GET", "trajectoire.html", true);
@@ -66,7 +67,7 @@ function dessinerTrajectoire() {
     }
     document.getElementById(
       "logdiv"
-    ).innerHTML = `<div class="logtraj">start ${x} ${y} 0 50</div><div class="logtraj">command</div><div class="logtraj">takeoff</div>`;
+    ).innerHTML = `<div class="logtraj">start ${x} ${y}</div><div class="logtraj">command</div><div class="logtraj">takeoff</div>`;
   } else {
     try {
       ctx.lineTo(x, y);
@@ -81,6 +82,16 @@ function dessinerTrajectoire() {
     }
     document.getElementById(
       "logdiv"
-    ).innerHTML += `<div class="logtraj">go ${x} ${y}</div>`;
+    ).innerHTML += `<div class="logtraj">go ${x} ${y} 0 50</div>`;
   }
+}
+
+function effacerTrajectoire(){
+  try {
+    ctx.closePath();  
+    ctx.clearRect();
+  } catch (error) {
+    
+  }
+  
 }
