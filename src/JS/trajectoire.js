@@ -25,8 +25,10 @@ function trajectoire() {
       document
         .getElementById("nav_charger")
         .addEventListener("click", showCharger);
+      document
+        .getElementById("effacer")
+        .addEventListener("click", effacerTrajectoire);
     }
-    document.getElementById("effacer").addEventListener("click", effacerTrajectoire);
   };
 
   xhttp.open("GET", "trajectoire.html", true);
@@ -86,12 +88,21 @@ function dessinerTrajectoire() {
   }
 }
 
-function effacerTrajectoire(){
+function effacerTrajectoire() {
   try {
-    ctx.closePath();  
-    ctx.clearRect();
+    ctx.closePath();
+    // ctx.save();
+    // ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // console.log(canvas.width + "\n" + canvas.height)
+    // ctx.restore();
+    var img = new Image();
+    img.src = "../img/plan.png";
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0);
+    };
+    isStartingPosition = false;
   } catch (error) {
-    
+    console.error(error)
   }
-  
 }
