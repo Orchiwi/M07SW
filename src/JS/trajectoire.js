@@ -28,6 +28,9 @@ function trajectoire() {
       document
         .getElementById("effacer")
         .addEventListener("click", effacerTrajectoire);
+      document
+        .getElementById("enregistrer")
+        .addEventListener("click", enregistrerTrajectoire);
     }
   };
 
@@ -103,6 +106,31 @@ function effacerTrajectoire() {
     };
     isStartingPosition = false;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
+}
+
+function enregistrerTrajectoire() {
+  titre = document.getElementById("titre").value
+  if(!titre){
+    return alert("Le champ titre est vide")
+  }
+try {
+  const datalist = document.getElementsByClassName("logtraj");
+  let commandJSON = `{
+ "titre": "${titre}",
+ "trajectoire": {`
+  for (let i = 0; i < datalist.length; i++) {
+    // console.log(datalist.item(i).innerText);
+    commandJSON += `"${i}": "${datalist.item(i).innerText}",`
+    
+ }
+ commandJSON = commandJSON.substring(0, commandJSON.length - 1);
+ commandJSON += `}}`
+console.log("Création du json : \n" + commandJSON)
+
+} catch (error) {
+ console.error(`Erreur lors de la création du json : ${error}`) 
+}
+  
 }
