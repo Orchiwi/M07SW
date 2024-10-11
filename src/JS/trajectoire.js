@@ -111,13 +111,14 @@ function effacerTrajectoire() {
 }
 
 function enregistrerTrajectoire() {
+  let commandJSON
   titre = document.getElementById("titre").value
   if(!titre){
     return alert("Le champ titre est vide")
   }
 try {
   const datalist = document.getElementsByClassName("logtraj");
-  let commandJSON = `{
+  commandJSON = `{
  "titre": "${titre}",
  "trajectoire": {`
   for (let i = 0; i < datalist.length; i++) {
@@ -133,4 +134,21 @@ console.log("Création du json : \n" + commandJSON)
  console.error(`Erreur lors de la création du json : ${error}`) 
 }
   
+
+
+
+const xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var reponse = this.responseText;
+      console.log(reponse)
+      console.log("test JS")
+    }
+  };
+
+    xhttp.open(
+        "POST",
+        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/trajectoire"
+      );
+      xhttp.send(commandJSON);
 }

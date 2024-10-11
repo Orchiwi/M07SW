@@ -81,6 +81,7 @@ if($req_type=="GET"){
 
 if($req_type=="POST")
 {
+    if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='newdata'){
 $donneesVolJSON=file_get_contents('php://input');
 $donneesVolAssoc=json_decode($donneesVolJSON,true);
 $Username = $donneesVolAssoc['nom'];
@@ -210,6 +211,11 @@ foreach($etatdonneesVolAssoc as $etat)
         $reqpreparer->execute($tableauDeDonnees);
         print_r("Un état a été créer\n");
 }
-
+    }
+    else if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='trajectoire') {
+        $donneesTrajJSON=file_get_contents('php://input');
+        $donneesTrajAssoc=json_decode($donneesTrajJSON,true);
+        print_r($donneesTrajAssoc);
+    }
 }
 ?>

@@ -19,11 +19,16 @@
     /* flex-grow: 1; */
     /* justify-content: flex-end; */
     height: auto;
-    min-height: 300px;
+    min-height: 100px;
+    max-height: 250px;
     width: 300px;
     
 }
 .logtraj{
     background-color: lightgray;
     height: 30px;
+}
+#canvas_trajectoire{
+    height: 6050;
+    width: 1120;
 }
