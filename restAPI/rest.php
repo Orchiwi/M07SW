@@ -242,19 +242,20 @@ foreach($etatdonneesVolAssoc as $etat)
             $reqpreparer->execute($tableauDeDonnees);
             print_r("La trajectoire ". $titreTraj ."a été créer\n");
             $idlistetraj=$BDD->lastInsertId();
-        }
 
-        $commandTraj = $donneesTrajAssoc['trajectoire'];
-        // print_r($etatdonneesVolAssoc);
-        foreach($commandTraj as $command)
-        {
-            print_r($command);
 
-                $req = "INSERT INTO trajectoire (idlisteTrajectoire,commande) VALUES (?,?)";
-                $reqpreparer=$BDD->prepare($req);
-                $tableauDeDonnees=array($idlistetraj,$command);
-                $reqpreparer->execute($tableauDeDonnees);
-                print_r("Une commande pour la trajectoire". $titreTraj . "[". $idlistetraj ."]" ."a été créer\n");
+            $commandTraj = $donneesTrajAssoc['trajectoire'];
+            // print_r($etatdonneesVolAssoc);
+            foreach($commandTraj as $command)
+            {
+                print_r($command);
+    
+                    $req = "INSERT INTO trajectoire (idlisteTrajectoire,commande) VALUES (?,?)";
+                    $reqpreparer=$BDD->prepare($req);
+                    $tableauDeDonnees=array($idlistetraj,$command);
+                    $reqpreparer->execute($tableauDeDonnees);
+                    print_r("Une commande pour la trajectoire". $titreTraj . "[". $idlistetraj ."]" ."a été créer\n");
+}
         }
 
 
