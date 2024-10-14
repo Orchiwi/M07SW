@@ -212,10 +212,53 @@ foreach($etatdonneesVolAssoc as $etat)
         print_r("Un état a été créer\n");
 }
     }
+
+
     else if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='trajectoire') {
         $donneesTrajJSON=file_get_contents('php://input');
         $donneesTrajAssoc=json_decode($donneesTrajJSON,true);
         print_r($donneesTrajAssoc);
+
+
+
+        $titreTraj=$donneesTrajAssoc['titre'];
+        $req = "SELECT idlisteTrajectoire FROM listeTrajectoire WHERE titre = ?";
+        $reqpreparer=$BDD->prepare($req);
+        $tableauDeDonnees=array($titreTraj);
+        $reqpreparer->execute($tableauDeDonnees);
+        $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+        $reqpreparer->closeCursor();
+        print_r($reponse);
+
+        if($reponse){
+            $idlistetraj= $reponse[0]['idlisteTrajectoire'];
+        }
+
+        else{
+            $req = "INSERT INTO listeTrajectoire (titre,type) VALUES (?,?);";
+            // $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+            $reqpreparer=$BDD->prepare($req);
+            $tableauDeDonnees=array($titreTraj,"Manuel");
+            $reqpreparer->execute($tableauDeDonnees);
+            print_r("La trajectoire ". $titreTraj ."a été créer\n");
+            $idlistetraj=$BDD->lastInsertId();
+        }
+
+        $commandTraj = $donneesTrajAssoc['trajectoire'];
+        // print_r($etatdonneesVolAssoc);
+        foreach($commandTraj as $command)
+        {
+            print_r($command);
+
+                $req = "INSERT INTO trajectoire (idlisteTrajectoire,commande) VALUES (?,?)";
+                $reqpreparer=$BDD->prepare($req);
+                $tableauDeDonnees=array($idlistetraj,$command);
+                $reqpreparer->execute($tableauDeDonnees);
+                print_r("Une commande pour la trajectoire". $titreTraj . "[". $idlistetraj ."]" ."a été créer\n");
+        }
+
+
+
     }
 }
 ?>
