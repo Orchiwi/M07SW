@@ -77,7 +77,19 @@ if($req_type=="GET"){
         
     }
       }
-}
+      else if (isset($cheminURL_tableau[1])&& $cheminURL_tableau[1]=='trajectoire'){
+                $req = "SELECT idlisteTrajectoire,titre FROM listeTrajectoire";
+                // $req = "SELECT * FROM etat WHERE idetat % 4 = 0";
+                $res=$BDD->prepare($req, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $res->execute(NULL);
+                $data = $res->fetchAll(PDO::FETCH_ASSOC);
+                $data_json = json_encode($data);
+                print_r($data_json);
+            }
+        
+    }
+      
+
 
 if($req_type=="POST")
 {
@@ -261,5 +273,22 @@ foreach($etatdonneesVolAssoc as $etat)
 
 
     }
+}
+
+
+
+if($req_type=="DELETE")
+{
+    if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='supptraj'){
+        $donneesVolJSON=file_get_contents('php://input');
+        $donneesVolAssoc=json_decode($donneesVolJSON,true);
+        $Username = $donneesVolAssoc['nom'];
+        $req = "DELETE FROM listeTrajectoire WHERE idlisteTrajectoire = ?";
+        $reqpreparer=$BDD->prepare($req);
+        $tableauDeDonnees=array($Username);
+        $reqpreparer->execute($tableauDeDonnees);
+        $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
+        $reqpreparer->closeCursor();
+}
 }
 ?>

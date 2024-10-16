@@ -28,7 +28,13 @@
     background-color: lightgray;
     height: 30px;
 }
-#canvas_trajectoire{
-    height: 6050;
+/* #canvas_trajectoire{
+    height: 650;
     width: 1120;
+} */
+#liste{
+    width: 400px;
+}
+.imgliste{
+    padding: 0px 40px 0px 0px;
 }

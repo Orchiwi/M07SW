@@ -42,11 +42,52 @@ function trajectoire() {
 function showCreer() {
   document.getElementById("liste_trajectoire").style.display = "none";
   document.getElementById("creer_trajectoire").style.display = "block";
+
 }
 
 function showCharger() {
   document.getElementById("creer_trajectoire").style.display = "none";
   document.getElementById("liste_trajectoire").style.display = "block";
+  
+
+  const xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var reponse = this.responseText;
+      var jsondata = JSON.parse(reponse);
+      console.log(jsondata[0].idlisteTrajectoire)
+      let htmldata = `
+      <h1>Liste des trajectoires</h1>
+                      <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Titre</th>
+                        <th>Action</th>
+                    </tr>`
+      var idlisteTrajectoire = [];
+      var titre = [];
+      // document.getElementById("liste").innerHTML = 
+      for (let i = 0; i < jsondata.length; i++) {
+        idlisteTrajectoire[i] = jsondata[i].idlisteTrajectoire;
+        titre[i] = jsondata[i].titre;
+        htmldata += `<tr>
+                          <td>${idlisteTrajectoire[i]}</td>
+                          <td>${titre[i]}</td>
+                          <td><img class="imgliste" src="./icones/corbeille2.png"><img src="./icones/itineraire2.png"></td>
+                      </tr>`
+        
+      }
+      document.getElementById("liste").innerHTML = htmldata
+      console.log(idlisteTrajectoire,titre)
+
+    }
+  }
+
+    xhttp.open(
+        "GET",
+        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/trajectoire"
+      );
+      xhttp.send();
 }
 
 function dessinerTrajectoire() {
@@ -54,16 +95,18 @@ function dessinerTrajectoire() {
   let posy = document.getElementById("posy").value;
   let x = parseInt(posx);
   let y = parseInt(posy);
+  let xg = x/2520*1120;
+  let yg = y/1040*650;
   if (!isStartingPosition) {
     try {
       isStartingPosition = true;
       ctx.beginPath();
-      ctx.moveTo(x, y);
-      ctx.moveTo(x - 5, y - 5);
-      ctx.lineTo(x + 5, y + 5);
-      ctx.moveTo(x + 5, y - 5);
-      ctx.lineTo(x - 5, y + 5);
-      ctx.moveTo(x, y);
+      ctx.moveTo(xg, yg);
+      ctx.moveTo(xg - 5, yg - 5);
+      ctx.lineTo(xg + 5, yg + 5);
+      ctx.moveTo(xg + 5, yg - 5);
+      ctx.lineTo(xg - 5, yg + 5);
+      ctx.moveTo(xg, yg);
       ctx.stroke();
     } catch (error) {
       console.error(
@@ -104,6 +147,9 @@ function effacerTrajectoire() {
     img.onload = function () {
       ctx.drawImage(img, 0, 0);
     };
+    document.getElementById(
+      "logdiv"
+    ).innerHTML = null;
     isStartingPosition = false;
   } catch (error) {
     console.error(error);
