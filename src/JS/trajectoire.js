@@ -42,20 +42,31 @@ function trajectoire() {
 function showCreer() {
   document.getElementById("liste_trajectoire").style.display = "none";
   document.getElementById("creer_trajectoire").style.display = "block";
-
 }
 
 function showCharger() {
   document.getElementById("creer_trajectoire").style.display = "none";
   document.getElementById("liste_trajectoire").style.display = "block";
-  
 
   const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       var reponse = this.responseText;
       var jsondata = JSON.parse(reponse);
-      console.log(jsondata[0].idlisteTrajectoire)
+      if (!jsondata[0]) {
+        let htmldata = `
+          <h1>Liste des trajectoires</h1>
+                          <table>
+                        <tr>
+                            <th>ID</th>
+                            <th>Titre</th>
+                            <th>Action</th>
+                        </tr>
+                        <table>`;
+        document.getElementById("liste").innerHTML = htmldata;
+        return;
+      }
+      console.log(jsondata[0].idlisteTrajectoire);
       let htmldata = `
       <h1>Liste des trajectoires</h1>
                       <table>
@@ -63,10 +74,10 @@ function showCharger() {
                         <th>ID</th>
                         <th>Titre</th>
                         <th>Action</th>
-                    </tr>`
+                    </tr>`;
       var idlisteTrajectoire = [];
       var titre = [];
-      // document.getElementById("liste").innerHTML = 
+      // document.getElementById("liste").innerHTML =
       for (let i = 0; i < jsondata.length; i++) {
         idlisteTrajectoire[i] = jsondata[i].idlisteTrajectoire;
         titre[i] = jsondata[i].titre;
@@ -74,20 +85,18 @@ function showCharger() {
                           <td>${idlisteTrajectoire[i]}</td>
                           <td>${titre[i]}</td>
                           <td><img class="imgliste" onclick="supprimerTrajectoire(${idlisteTrajectoire[i]})" src="./icones/corbeille2.png"><img class="imgliste" src="./icones/itineraire2.png"></td>
-                      </tr>`
-        
+                      </tr>`;
       }
-      document.getElementById("liste").innerHTML = htmldata
-      console.log(idlisteTrajectoire,titre)
-
+      document.getElementById("liste").innerHTML = htmldata;
+      console.log(idlisteTrajectoire, titre);
     }
-  }
+  };
 
-    xhttp.open(
-        "GET",
-        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/trajectoire"
-      );
-      xhttp.send();
+  xhttp.open(
+    "GET",
+    "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/trajectoire"
+  );
+  xhttp.send();
 }
 
 function dessinerTrajectoire() {
@@ -95,8 +104,8 @@ function dessinerTrajectoire() {
   let posy = document.getElementById("posy").value;
   let x = parseInt(posx);
   let y = parseInt(posy);
-  let xg = x/2520*1120;
-  let yg = y/1040*650;
+  let xg = (x / 2520) * 1120;
+  let yg = (y / 1040) * 650;
   if (!isStartingPosition) {
     try {
       isStartingPosition = true;
@@ -147,9 +156,7 @@ function effacerTrajectoire() {
     img.onload = function () {
       ctx.drawImage(img, 0, 0);
     };
-    document.getElementById(
-      "logdiv"
-    ).innerHTML = null;
+    document.getElementById("logdiv").innerHTML = null;
     isStartingPosition = false;
   } catch (error) {
     console.error(error);
@@ -157,81 +164,70 @@ function effacerTrajectoire() {
 }
 
 function enregistrerTrajectoire() {
-  let commandJSON
-  titre = document.getElementById("titre").value
-  if(!titre){
-    return alert("Le champ titre est vide")
+  let commandJSON;
+  titre = document.getElementById("titre").value;
+  if (!titre) {
+    return alert("Le champ titre est vide");
   }
-try {
-  const datalist = document.getElementsByClassName("logtraj");
-  commandJSON = `{
+  try {
+    const datalist = document.getElementsByClassName("logtraj");
+    commandJSON = `{
  "titre": "${titre}",
- "trajectoire": {`
-  for (let i = 0; i < datalist.length; i++) {
-    // console.log(datalist.item(i).innerText);
-    commandJSON += `"${i}": "${datalist.item(i).innerText}",`
-    
- }
- commandJSON = commandJSON.substring(0, commandJSON.length - 1);
- commandJSON += `}}`
-console.log("Création du json : \n" + commandJSON)
+ "trajectoire": {`;
+    for (let i = 0; i < datalist.length; i++) {
+      // console.log(datalist.item(i).innerText);
+      commandJSON += `"${i}": "${datalist.item(i).innerText}",`;
+    }
+    commandJSON = commandJSON.substring(0, commandJSON.length - 1);
+    commandJSON += `}}`;
+    console.log("Création du json : \n" + commandJSON);
+  } catch (error) {
+    console.error(`Erreur lors de la création du json : ${error}`);
+  }
 
-} catch (error) {
- console.error(`Erreur lors de la création du json : ${error}`) 
-}
-  
-
-
-
-const xhttp = new XMLHttpRequest();
+  const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       var reponse = this.responseText;
-      console.log(reponse)
-      console.log("test JS")
+      console.log(reponse);
+      console.log("test JS");
     }
   };
 
-    xhttp.open(
-        "POST",
-        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/trajectoire"
-      );
-      xhttp.send(commandJSON);
+  xhttp.open(
+    "POST",
+    "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/trajectoire"
+  );
+  xhttp.send(commandJSON);
 }
 
-
-function supprimerTrajectoire(id){
-  let commandJSON
+function supprimerTrajectoire(id) {
+  let commandJSON;
   // titre = document.getElementById("titre").value
   // if(!titre){
   //   return alert("Le champ titre est vide")
   // }
-try {
-  // const datalist = document.getElementsByClassName("logtraj");
-  commandJSON = `{"idlisteTrajectoire": "${id}"}`
-console.log("Création du json : \n" + commandJSON)
+  try {
+    // const datalist = document.getElementsByClassName("logtraj");
+    commandJSON = `{"idlisteTrajectoire": "${id}"}`;
+    console.log("Création du json : \n" + commandJSON);
+  } catch (error) {
+    console.error(`Erreur lors de la création du json : ${error}`);
+  }
 
-} catch (error) {
- console.error(`Erreur lors de la création du json : ${error}`) 
-}
-  
-
-
-
-const xhttp = new XMLHttpRequest();
+  const xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function () {
     if (this.readyState == 4 && this.status == 200) {
       var reponse = this.responseText;
-      console.log(reponse)
-      console.log("test JS")
+      console.log(reponse);
+      console.log("test JS");
+      showCharger();
     }
   };
 
-    xhttp.open(
-        "DELETE",
-        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/trajectoire"
-      );
-      xhttp.send(commandJSON);
+  xhttp.open(
+    "DELETE",
+    "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/supptraj"
+  );
+  xhttp.send(commandJSON);
 }
-
-
