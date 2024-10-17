@@ -280,15 +280,16 @@ foreach($etatdonneesVolAssoc as $etat)
 if($req_type=="DELETE")
 {
     if(isset($cheminURL_tableau[1]) && $cheminURL_tableau[1]=='supptraj'){
-        $donneesVolJSON=file_get_contents('php://input');
-        $donneesVolAssoc=json_decode($donneesVolJSON,true);
-        $Username = $donneesVolAssoc['nom'];
+        $donneestrajJSON=file_get_contents('php://input');
+        $donneesTraj=json_decode($donneesVolJSON,true);
+        $Idtraj=$donneesTraj['idlisteTrajectoire'];
         $req = "DELETE FROM listeTrajectoire WHERE idlisteTrajectoire = ?";
         $reqpreparer=$BDD->prepare($req);
-        $tableauDeDonnees=array($Username);
+        $tableauDeDonnees=array($Idtraj);
         $reqpreparer->execute($tableauDeDonnees);
         $reponse=$reqpreparer ->fetchAll(PDO::FETCH_ASSOC);
         $reqpreparer->closeCursor();
+        print_r("La trajectoire" . $Idtraj . "a été supprimé");
 }
 }
 ?>

@@ -73,7 +73,7 @@ function showCharger() {
         htmldata += `<tr>
                           <td>${idlisteTrajectoire[i]}</td>
                           <td>${titre[i]}</td>
-                          <td><img class="imgliste" src="./icones/corbeille2.png"><img src="./icones/itineraire2.png"></td>
+                          <td><img class="imgliste" onclick="supprimerTrajectoire(${idlisteTrajectoire[i]})" src="./icones/corbeille2.png"><img class="imgliste" src="./icones/itineraire2.png"></td>
                       </tr>`
         
       }
@@ -198,3 +198,40 @@ const xhttp = new XMLHttpRequest();
       );
       xhttp.send(commandJSON);
 }
+
+
+function supprimerTrajectoire(id){
+  let commandJSON
+  // titre = document.getElementById("titre").value
+  // if(!titre){
+  //   return alert("Le champ titre est vide")
+  // }
+try {
+  // const datalist = document.getElementsByClassName("logtraj");
+  commandJSON = `{"idlisteTrajectoire": "${id}"}`
+console.log("Création du json : \n" + commandJSON)
+
+} catch (error) {
+ console.error(`Erreur lors de la création du json : ${error}`) 
+}
+  
+
+
+
+const xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function () {
+    if (this.readyState == 4 && this.status == 200) {
+      var reponse = this.responseText;
+      console.log(reponse)
+      console.log("test JS")
+    }
+  };
+
+    xhttp.open(
+        "DELETE",
+        "http://172.20.21.202/~morlet/M07SW/restAPI/rest.php/trajectoire"
+      );
+      xhttp.send(commandJSON);
+}
+
+
